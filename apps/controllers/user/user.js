@@ -1,29 +1,14 @@
-var express = require("express");
-var url = require("url");
-var mongoose = require('mongoose');
-var User = require('../../models/user');
-var Message = require('../../models/message');
-var Room = require('../../models/room');
+const express = require("express");
+const url = require("url");
+const mongoose = require('mongoose');
+const User = require('../../models/user');
+const Message = require('../../models/message');
+const Room = require('../../models/room');
 
-var router = express.Router();
+const router = express.Router();
 
-// router.get("/:room", function (req, res, next) {
-//     console.log(req.params.room);
-//     Message.find(function (err, listMessage) {
-//         if (err) {
-//             return res.status(500).json({
-//                 title: 'An error occurred',
-//                 error: err
-//             });
-//         }
-//         res.json({
-//             listMessage: listMessage
-//         });
-//     });
-// });
-
-router.get("/", function (req, res, next) {
-    Message.find(function (err, listMessage) {
+router.get("/", (req, res, next) => {
+    Message.find((err, listMessage) => {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
@@ -36,10 +21,10 @@ router.get("/", function (req, res, next) {
     });
 });
 
-router.get("/list-message-by-user", function (req, res) {
+router.get("/list-message-by-user", (req, res) => {
     Message.find({
         user: mongoose.Types.ObjectId(req.query.id)
-    }, function (err, listMessage) {
+    }, (err, listMessage) => {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
@@ -52,8 +37,8 @@ router.get("/list-message-by-user", function (req, res) {
     });
 });
 
-router.get("/list-user", function (req, res) {
-    User.find(function (err, listUser) {
+router.get("/list-user", (req, res) => {
+    User.find((err, listUser) => {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
@@ -66,8 +51,8 @@ router.get("/list-user", function (req, res) {
     });
 });
 
-router.post("/get-list-message-by-room", function (req, res) {
-    var roomId = req.body.roomId;
+router.post("/get-list-message-by-room", (req, res) => {
+    let roomId = req.body.roomId;
     if (roomId.trim().length === 0) {
         res.status(500).json({
             title: "An erroroccurred",
@@ -76,7 +61,7 @@ router.post("/get-list-message-by-room", function (req, res) {
     } else {
         Message.find({
             room: mongoose.Types.ObjectId(roomId)
-        }, function (err, listMessage) {
+        }, (err, listMessage) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -90,8 +75,8 @@ router.post("/get-list-message-by-room", function (req, res) {
     }
 })
 
-router.post("/get-room", function (req, res) {
-    var params = req.body;
+router.post("/get-room", (req, res) => {
+    let params = req.body;
     console.log(params);
     if (params.myId.trim().length === 0 || params.theirId.trim().length === 0) {
         res.status(500).json({
@@ -101,7 +86,7 @@ router.post("/get-room", function (req, res) {
     } else {
         Room.find({
             users: [params.myId, params.theirId]
-        }, function (err, room) {
+        }, (err, room) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -122,8 +107,8 @@ router.post("/get-room", function (req, res) {
     }
 });
 
-router.post("/create-room", function (req, res) {
-    var params = req.body;
+router.post("/create-room", (req, res) => {
+    let params = req.body;
     console.log(params);
     if (params.myId.trim().length === 0 || params.theirId.trim().length === 0) {
         res.status(500).json({
@@ -131,10 +116,10 @@ router.post("/create-room", function (req, res) {
             error: "Length must greater than 0"
         });
     } else {
-        var room = new Room({
+        let room = new Room({
             users: [params.myId, params.theirId]
         });
-        room.save(function (err, result) {
+        room.save((err, result) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -148,8 +133,8 @@ router.post("/create-room", function (req, res) {
     }
 })
 
-router.post("/create-message", function (req, res) {
-    var params = req.body;
+router.post("/create-message", (req, res) => {
+    let params = req.body;
     console.log(params);
     if (params.content.trim().length === 0 || params.user.trim().length === 0 || params.room.trim().length == 0) {
         res.status(500).json({
@@ -157,12 +142,12 @@ router.post("/create-message", function (req, res) {
             error: "Length must greater than 0"
         });
     } else {
-        var message = new Message({
+        let message = new Message({
             content: params.content,
             user: params.user,
             room: params.room
         });
-        message.save(function (err, result) {
+        message.save((err, result) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -176,8 +161,8 @@ router.post("/create-message", function (req, res) {
     }
 })
 
-router.post("/", function (req, res) {
-    var params = req.body;
+router.post("/", (req, res) => {
+    let params = req.body;
     if (params.message.trim().length == 0) {
         res.status(500).json({
             title: "An erroroccurred",
@@ -186,18 +171,18 @@ router.post("/", function (req, res) {
     } else {
         User.findOne({
             email: '1234@gmail.com'
-        }, function (err, user) {
+        }, (err, user) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
                     error: err
                 });
             }
-            var message = new Message({
+            let message = new Message({
                 content: params.message,
                 user: user
             });
-            message.save(function (err, reuslt) {
+            message.save((err, reuslt) => {
                 if (err) {
                     return res.status(500).json({
                         title: 'An error occurred',
