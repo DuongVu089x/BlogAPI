@@ -20,15 +20,7 @@ var schema = new Schema({
         type: String,
         required: true,
         unique: true
-    },
-    messages: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Message'
-    }],
-    rooms:[{
-        type : Schema.Types.ObjectId,
-        ref: 'Room'
-    }]
+    }
 });
 
 schema.plugin(mongooseUniqueVaidator);

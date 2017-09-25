@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const User = require('../../models/user');
 const Message = require('../../models/message');
 const Room = require('../../models/room');
+const userService = require('../../services/user.service');
+const roomService = require('../../services/room.service');
 
 const router = express.Router();
 
@@ -77,23 +79,20 @@ router.post("/get-list-message-by-room", (req, res) => {
 
 router.post("/get-room", (req, res) => {
     let params = req.body;
-    console.log(params);
     if (params.myId.trim().length === 0 || params.theirId.trim().length === 0) {
         res.status(500).json({
             title: "An erroroccurred",
             error: "Length must greater than 0"
         });
     } else {
-        Room.find({
-            users: [params.myId, params.theirId]
-        }, (err, room) => {
+        let users = [params.myId, params.theirId];
+        roomService.findRoomByUsers(users, (err, room) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
                     error: err
                 });
             }
-            console.log(room);
             if (room.length > 0) {
                 res.json({
                     roomId: room[0]._id
@@ -109,7 +108,6 @@ router.post("/get-room", (req, res) => {
 
 router.post("/create-room", (req, res) => {
     let params = req.body;
-    console.log(params);
     if (params.myId.trim().length === 0 || params.theirId.trim().length === 0) {
         res.status(500).json({
             title: "An erroroccurred",
@@ -119,7 +117,7 @@ router.post("/create-room", (req, res) => {
         let room = new Room({
             users: [params.myId, params.theirId]
         });
-        room.save((err, result) => {
+        roomService.createRoom(room, (err, result) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -135,7 +133,6 @@ router.post("/create-room", (req, res) => {
 
 router.post("/create-message", (req, res) => {
     let params = req.body;
-    console.log(params);
     if (params.content.trim().length === 0 || params.user.trim().length === 0 || params.room.trim().length == 0) {
         res.status(500).json({
             title: "An erroroccurred",

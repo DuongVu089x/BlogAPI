@@ -27,8 +27,8 @@ router.get('/', function (req, res) {
             }
             res.json({
                 email: user.email
-            })
-        })
+            });
+        });
     });
 });
 
