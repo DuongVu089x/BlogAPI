@@ -214,7 +214,7 @@ router.post("/register", (req, res) => {
                     error: err
                 });
             }
-            if (user.id == null) {
+            if (user == null) {
                 userService.createUser(params, (err, user) => {
                     if (err) {
                         return res.status(500).json({
@@ -227,9 +227,10 @@ router.post("/register", (req, res) => {
                     });
                 })
             } else {
-                res.status(200).json({
+                res.status(409).json({
+                    title: "An erroroccurred",
                     message: 'Email is already exists'
-                })
+                });
             }
         });
 
