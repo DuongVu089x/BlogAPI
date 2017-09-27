@@ -1,13 +1,16 @@
-var express = require('express');
-var logger = require('morgan');
-var config = require('config');
-var path = require('path');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var mongoose = require('mongoose');
-var socketio= require('socket.io');
+const express = require('express');
+const expressValidator = require('express-validator');
+const logger = require('morgan');
+const config = require('config');
+const path = require('path');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const mongoose = require('mongoose');
+const socketio = require('socket.io');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-var app = express();
+const app = express();
 mongoose.connect('localhost:27017/blog', {
     socketTimeoutMS: 0,
     keepAlive: true,
@@ -25,9 +28,13 @@ app.set('trust proxy', 1);
 //Static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-var controllers = require(__dirname + '/apps/controllers');
+const controllers = require(__dirname + '/apps/controllers');
 
-app.use(function (req, res, next) {
+// Init passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -46,15 +53,33 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Express Validator
+app.use(expressValidator({
+    errorFormatter: (param, msg, value) => {
+        let namespace = param.split('.'),
+            root = namespace.shift(),
+            formParam = root;
+
+        while (namespace.length) {
+            formParam += '[' + namespace.shift() + ']';
+        }
+        return {
+            param: formParam,
+            msg: msg,
+            value: value
+        };
+    }
+}));
+
 app.use('/', controllers);
 
-var host = config.get('server.host');
-var port = config.get('server.port');
+const host = config.get('server.host');
+const port = config.get('server.port');
 
-var server = app.listen(port, host, function () {
+const server = app.listen(port, host, () => {
     console.log("Server is running on port " + port);
 });
 
-var io = socketio(server);
+const io = socketio(server);
 
-var sockectControl = require("./apps/common/socketcontrol")(io);
+const sockectControl = require("./apps/common/socketcontrol")(io);
