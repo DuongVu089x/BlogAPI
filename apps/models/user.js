@@ -6,11 +6,11 @@ var Schema = mongoose.Schema;
 var schema = new Schema({
     firstName: {
         type: String,
-        required: true
+        //required: true
     },
     lastName: {
         type: String,
-        required: true
+        //required: true
     },
     password: {
         type: String,

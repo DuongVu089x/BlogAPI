@@ -166,9 +166,8 @@ router.post("/", (req, res) => {
             error: "Length must greater than 0"
         });
     } else {
-        User.findOne({
-            email: '1234@gmail.com'
-        }, (err, user) => {
+        let email = '1234@gmail.com';
+        userService.findByEmail(email, (err, user) => {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -190,6 +189,55 @@ router.post("/", (req, res) => {
             });
         });
     }
+});
+
+router.post("/register", (req, res) => {
+    console.log(req.body);
+    let params = req.body;
+    req.checkBody('email', 'Email field is required').notEmpty();
+    req.checkBody('email', 'Email must be a valid email address').isEmail();
+    req.checkBody('password', 'Password field is required').notEmpty();
+    req.checkBody('confirmPassword', 'ConfirmPassword field is required').notEmpty();
+    req.checkBody('confirmPassword', 'Passwords do not match').equals(params.password);
+    let errors = req.validationErrors();
+
+    if (errors) {
+        res.status(500).json({
+            title: "An erroroccurred",
+            error: errors
+        });
+    } else {
+        userService.findByEmail(params.email, (err, user) => {
+            if (err) {
+                return res.status(500).json({
+                    title: "An erroroccurred",
+                    error: err
+                });
+            }
+            if (user.id == null) {
+                userService.createUser(params, (err, user) => {
+                    if (err) {
+                        return res.status(500).json({
+                            title: "An erroroccurred",
+                            error: err
+                        });
+                    }
+                    res.status(200).json({
+                        userId: user._id
+                    });
+                })
+            } else {
+                res.status(200).json({
+                    message: 'Email is already exists'
+                })
+            }
+        });
+
+    }
+});
+
+router.post("/login", (req, res) => {
+    console.log(req.body);
 });
 
 module.exports = router;
