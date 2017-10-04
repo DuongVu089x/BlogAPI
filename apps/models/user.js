@@ -1,9 +1,10 @@
-var mongoose = require('mongoose');
-var mongooseUniqueVaidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose');
+const mongooseUniqueVaidator = require('mongoose-unique-validator');
+const passportLocalMongoose = require('passport-local-mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var schema = new Schema({
+let schema = new Schema({
     firstName: {
         type: String,
         //required: true
@@ -24,5 +25,12 @@ var schema = new Schema({
 });
 
 schema.plugin(mongooseUniqueVaidator);
+schema.plugin(passportLocalMongoose, {
+    usernameField: 'email',
+    errorMessages: {
+        MissingPasswordError: "No message",
+        MissingUsernameError: "No username"
+    }
+});
 
 module.exports = mongoose.model('User', schema);

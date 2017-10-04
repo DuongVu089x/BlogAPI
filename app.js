@@ -1,3 +1,4 @@
+const http = require('http');
 const express = require('express');
 const expressValidator = require('express-validator');
 const logger = require('morgan');
@@ -9,8 +10,10 @@ const mongoose = require('mongoose');
 const socketio = require('socket.io');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const User = require('./apps/models/user');
 
 const app = express();
+app.server = http.createServer(app);
 mongoose.connect('localhost:27017/blog', {
     socketTimeoutMS: 0,
     keepAlive: true,
@@ -32,7 +35,15 @@ const controllers = require(__dirname + '/apps/controllers');
 
 // Init passport
 app.use(passport.initialize());
-app.use(passport.session());
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+    User.authenticate()
+));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
 
