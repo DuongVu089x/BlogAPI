@@ -12,5 +12,9 @@ module.export = {
 
     deleteFriend(query, callback) {
         Friend.deleteOne(query, callback);
+    },
+
+    findListFriend(query, callback) {
+        Friend.find().populate('theirId').exec(callback);
     }
 }
