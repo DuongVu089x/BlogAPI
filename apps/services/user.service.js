@@ -15,11 +15,10 @@ module.exports = {
         };
         userDao.findByEmail(query, callback);
     },
-    createUser(params, callback) {
-        let user = new User({
-            email: params.email,
-            password: passwordEncoder.hashPassword(params.password)
-        });
-        userDao.createUser(user, callback);
+    createUser(req, params, callback) {
+        User.register(new User({
+            password: passwordEncoder.hashPassword(params.password),
+            email: params.email
+        }), req.body.password, callback);
     }
 }

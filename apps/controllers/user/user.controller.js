@@ -1,11 +1,15 @@
 const express = require("express");
 const url = require("url");
 const mongoose = require('mongoose');
+const passport = require('passport');
+
+const authMiddleware = require('./../../middleware/auth.middleware');
 const User = require('../../models/user');
 const Message = require('../../models/message');
 const Room = require('../../models/room');
 const userService = require('../../services/user.service');
 const roomService = require('../../services/room.service');
+
 
 const router = express.Router();
 
@@ -192,7 +196,6 @@ router.post("/", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-    console.log(req.body);
     let params = req.body;
     req.checkBody('email', 'Email field is required').notEmpty();
     req.checkBody('email', 'Email must be a valid email address').isEmail();
@@ -215,17 +218,19 @@ router.post("/register", (req, res) => {
                 });
             }
             if (user == null) {
-                userService.createUser(params, (err, user) => {
+                userService.createUser(req, params, (err, account) => {
                     if (err) {
-                        return res.status(500).json({
-                            title: "An erroroccurred",
-                            error: err
-                        });
+                        return res.status(500).send('An error occurred: ' + err);
                     }
-                    res.status(200).json({
-                        userId: user._id
+                    passport.authenticate(
+                        'local', {
+                            session: false
+                        })(req, res, () => {
+                        res.status(200).json({
+                            message: 'Successfully created new account'
+                        });
                     });
-                })
+                });
             } else {
                 res.status(409).json({
                     title: "An erroroccurred",
@@ -237,8 +242,16 @@ router.post("/register", (req, res) => {
     }
 });
 
-router.post("/login", (req, res) => {
-    console.log(req.body);
-});
+router.post("/login", passport.authenticate('local', {
+    session: false,
+    scope: [],
+    failureRedirect: 'error',
+}), authMiddleware.generateAccessToken, authMiddleware.respond);
+
+router.get('/error', (req, res) => {
+    res.json({
+        message: 'Invalid email or password'
+    })
+})
 
 module.exports = router;
