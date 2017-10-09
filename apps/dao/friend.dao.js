@@ -25,8 +25,7 @@ module.exports = {
             })
             .populate({
                 path: 'theirId',
-                select: 'email -_id'
+                select: 'email -_id avatar'
             }).exec(callback);
-        //friend.save();
     }
 }

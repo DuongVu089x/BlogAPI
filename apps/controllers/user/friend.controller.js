@@ -9,7 +9,7 @@ const friendService = require('../../services/friend.service');
 const router = express.Router();
 
 
-router.post("/get-list-friend", (req, res) => {
+router.post("/get-list-friend", authMiddleware.authenticate, (req, res) => {
     let params = req.body;
     req.checkBody('email', 'Email field is required').notEmpty();
     req.checkBody('email', 'Email must be a valid email address').isEmail();

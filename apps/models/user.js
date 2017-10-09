@@ -28,6 +28,9 @@ let schema = new Schema({
             isAsync: true,
             message: '{VALUE} is not a valid email'
         }
+    },
+    avatar: {
+        type: String
     }
 });
 
