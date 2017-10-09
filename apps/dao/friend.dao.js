@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Friend = require('./../models/friend');
 
-module.export = {
+module.exports = {
     findFriendByName(query, callback) {
         Friend.findOne(query, callback);
     },
@@ -15,6 +15,18 @@ module.export = {
     },
 
     findListFriend(query, callback) {
-        Friend.find().populate('theirId').exec(callback);
+        Friend.find(query, {
+                _id: 0,
+                theirId: 1
+            })
+            .populate({
+                path: 'myId',
+                select: '_id'
+            })
+            .populate({
+                path: 'theirId',
+                select: 'email -_id'
+            }).exec(callback);
+        //friend.save();
     }
 }
