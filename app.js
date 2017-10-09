@@ -6,7 +6,7 @@ const config = require('config');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const mongoose = require('mongoose');
+const mongoose = require('./apps/db/mongoose');
 const socketio = require('socket.io');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -14,11 +14,6 @@ const User = require('./apps/models/user');
 
 const app = express();
 app.server = http.createServer(app);
-mongoose.connect('localhost:27017/blog', {
-    socketTimeoutMS: 0,
-    keepAlive: true,
-    reconnectTries: 30
-});
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -35,6 +30,7 @@ const controllers = require(__dirname + '/apps/controllers');
 
 // Init passport
 app.use(passport.initialize());
+
 passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password'

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 const mongooseUniqueVaidator = require('mongoose-unique-validator');
 const passportLocalMongoose = require('passport-local-mongoose');
 
@@ -15,12 +16,18 @@ let schema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 6
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: {
+            validator: validator.isEmail,
+            isAsync: true,
+            message: '{VALUE} is not a valid email'
+        }
     }
 });
 
