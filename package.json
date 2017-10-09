@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node --nolazy --debug-brk=5858 myProgram.js"
+    "debug": "node --nolazy --debug-brk=5858 myProgram.js",
+    "start": "node app"
   },
   "author": "",
   "license": "ISC",
@@ -15,13 +16,23 @@
     "config": "^1.26.2",
     "debug": "^3.0.1",
     "express": "^4.15.3",
-    "express-session": "^1.15.5",
+    "express-handlebars": "^3.0.0",
+    "express-jwt": "^5.3.0",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.15.6",
+    "express-validator": "^4.2.1",
     "firebase": "^4.3.0",
+    "jsonwebtoken": "^8.0.1",
     "mongoose": "^4.11.11",
     "mongoose-unique-validator": "^1.0.6",
     "morgan": "^1.8.2",
+    "passport": "^0.4.0",
+    "passport-http": "^0.3.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.2.1",
     "q": "^1.5.0",
     "rxjs": "^5.4.3",
-    "socket.io": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "validator": "^9.0.0"
   }
 }

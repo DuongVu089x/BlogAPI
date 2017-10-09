@@ -1,28 +1,46 @@
-var mongoose = require('mongoose');
-var mongooseUniqueVaidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose');
+const validator = require('validator');
+const mongooseUniqueVaidator = require('mongoose-unique-validator');
+const passportLocalMongoose = require('passport-local-mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var schema = new Schema({
+let schema = new Schema({
     firstName: {
         type: String,
-        required: true
+        //required: true
     },
     lastName: {
         type: String,
-        required: true
+        //required: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 6
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: {
+            validator: validator.isEmail,
+            isAsync: true,
+            message: '{VALUE} is not a valid email'
+        }
+    },
+    avatar: {
+        type: String
     }
 });
 
 schema.plugin(mongooseUniqueVaidator);
+schema.plugin(passportLocalMongoose, {
+    usernameField: 'email',
+    errorMessages: {
+        MissingPasswordError: "No message",
+        MissingUsernameError: "No username"
+    }
+});
 
 module.exports = mongoose.model('User', schema);
