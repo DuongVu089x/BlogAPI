@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Friend = require('./../models/friend');
 
-module.export = {
+module.exports = {
     findFriendByName(query, callback) {
         Friend.findOne(query, callback);
     },
