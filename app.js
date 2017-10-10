@@ -47,7 +47,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-type, Authorization');
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
@@ -89,7 +89,7 @@ const host = config.get('server.host');
 const port = config.get('server.port');
 
 const server = app.listen(port, host, () => {
-    console.log("Server is running on port " + port);
+    console.log(`Server is running on port ${port}`);
 });
 
 const io = socketio(server);
