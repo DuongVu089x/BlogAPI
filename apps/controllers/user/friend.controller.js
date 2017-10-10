@@ -30,7 +30,7 @@ router.post("/get-list-friend", (req, res) => {
             }
             if (user != null) {
                 friendService.findListFriends(user._id, (err, friend) => {
-                    res.json(friend);
+                    res.status(200).json(friend);
                 });
             }
         })
