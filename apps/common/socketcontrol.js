@@ -1,4 +1,4 @@
-module.exports = function (io) {
+module.exports = (io) => {
     var usernames = [];
 
     io.sockets.on("connection", function (socket) {

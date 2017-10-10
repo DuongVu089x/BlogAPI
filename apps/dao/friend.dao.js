@@ -19,10 +19,10 @@ module.exports = {
                 _id: 0,
                 theirId: 1
             })
-            .populate({
-                path: 'myId',
-                select: '_id'
-            })
+            // .populate({
+            //     path: 'myId',
+            //     select: '_id'
+            // })
             .populate({
                 path: 'theirId',
                 select: 'email -_id avatar'

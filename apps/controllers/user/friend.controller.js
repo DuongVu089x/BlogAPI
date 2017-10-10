@@ -16,7 +16,7 @@ router.post("/get-list-friend", (req, res) => {
     let errors = req.validationErrors();
 
     if (errors) {
-        res.status(500).json({
+        return res.status(500).json({
             title: "An erroroccurred",
             error: errors
         });
@@ -29,8 +29,18 @@ router.post("/get-list-friend", (req, res) => {
                 });
             }
             if (user != null) {
-                friendService.findListFriends(user._id, (err, friend) => {
-                    res.status(200).json(friend);
+                friendService.findListFriends(user._id, (err, friends) => {
+                    if (err) {
+                        return res.status(500).json({
+                            title: "An erroroccurred",
+                            error: errors
+                        });
+                    }
+                    let result = [];
+                    friends.forEach((friend) => {
+                        result.push(friend.theirId);
+                    });
+                    res.status(200).json(result);
                 });
             }
         })
