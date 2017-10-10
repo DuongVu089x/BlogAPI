@@ -7,10 +7,14 @@ module.exports = {
     },
 
     findActionByArticle(article, callback) {
-        let query = {
-            article: article
-        }
-
-        Action.findOne(query, callback);
-    }
+        Action.findOne(article, callback);
+    },
+	
+	findActionByType(type, callback) {
+		Action.findOne(type, callback);
+	},
+	
+	deleteAction(query, callback) {
+		Action.deleteOne(query, callback);
+	}
 }
