@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const authMiddleware = require('./../../middleware/auth.middleware');
+
 const User = require('../../models/user');
 const Room = require('../../models/room');
 const userService = require('../../services/user.service');
@@ -27,13 +28,19 @@ router.get("/list-user", (req, res) => {
 
 router.post("/get-room", (req, res) => {
     let params = req.body;
-    if (params.myId.trim().length === 0 || params.theirId.trim().length === 0) {
-        res.status(500).json({
+    req.checkBody('myEmail', 'Email field is required').notEmpty();
+    req.checkBody('myEmail', 'Email must be a valid email address').isEmail();
+    req.checkBody('theirEmail', 'Email field is required').notEmpty();
+    req.checkBody('theirEmail', 'Email must be a valid email address').isEmail();
+    let errors = req.validationErrors();
+
+    if (errors) {
+        return res.status(500).json({
             title: "An erroroccurred",
-            error: "Length must greater than 0"
+            error: errors
         });
     } else {
-        let users = [params.myId, params.theirId];
+        let users = [params.myEmail, params.theirEmail];
         roomService.findRoomByUsers(users, (err, room) => {
             if (err) {
                 return res.status(500).json({
