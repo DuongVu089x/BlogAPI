@@ -53,7 +53,7 @@ router.get("/list-message-by-user", (req, res) => {
 router.post("/get-list-message-by-room", (req, res) => {
     let roomId = req.body.roomId;
     if (roomId.trim().length === 0) {
-        res.status(500).json({
+        return res.status(500).json({
             title: "An erroroccurred",
             error: "Length must greater than 0"
         });
