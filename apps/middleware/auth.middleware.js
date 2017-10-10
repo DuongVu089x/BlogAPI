@@ -1,19 +1,14 @@
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
+const config = require('config');
 
 const TOKENTIME = 60 * 60 * 24 * 30;
-const SECRET = "|)/\\/ |3|_()G";
-
-
-let authenticate = expressJwt({
-    secret: SECRET
-});
 
 let generateAccessToken = (req, res, next) => {
     req.token = req.token || {};
     req.token = jwt.sign({
         id: req.user.id,
-    }, SECRET, {
+    }, config.get('secret_key'), {
         expiresIn: TOKENTIME // 30 days
     });
     next();
@@ -27,7 +22,6 @@ let respond = (req, res) => {
 }
 
 module.exports = {
-    authenticate,
     generateAccessToken,
     respond
 };

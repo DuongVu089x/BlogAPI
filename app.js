@@ -6,11 +6,11 @@ const config = require('config');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const mongoose = require('./apps/db/mongoose');
 const socketio = require('socket.io');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('./apps/models/user');
+const expressJwt = require('express-jwt');
+
+const mongoose = require('./apps/db/mongoose');
 
 const app = express();
 app.server = http.createServer(app);
@@ -30,16 +30,13 @@ const controllers = require(__dirname + '/apps/controllers');
 
 // Init passport
 app.use(passport.initialize());
+require('./apps/common/passport.config')(passport);
 
-passport.use(new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    },
-    User.authenticate()
-));
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+app.use(expressJwt({
+    secret: config.get('secret_key'),
+}).unless({
+    path: ['/api/user/login', '/api/user/register']
+}));
 
 app.use((req, res, next) => {
 
@@ -58,6 +55,14 @@ app.use((req, res, next) => {
 
     // Pass to next layer of middleware
     next();
+});
+
+// Error handler middleware
+app.use(function (err, req, res, next) {
+    return res.status(401).json({
+        status: 'error',
+        code: 'unauthorized'
+    });
 });
 
 // Express Validator
