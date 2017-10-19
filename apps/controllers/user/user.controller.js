@@ -26,66 +26,6 @@ router.get("/list-user", (req, res) => {
     });
 });
 
-router.post("/get-room", (req, res) => {
-    let params = req.body;
-    req.checkBody('myEmail', 'Email field is required').notEmpty();
-    req.checkBody('myEmail', 'Email must be a valid email address').isEmail();
-    req.checkBody('theirEmail', 'Email field is required').notEmpty();
-    req.checkBody('theirEmail', 'Email must be a valid email address').isEmail();
-    let errors = req.validationErrors();
-
-    if (errors) {
-        return res.status(500).json({
-            title: "An erroroccurred",
-            error: errors
-        });
-    } else {
-        let users = [params.myEmail, params.theirEmail];
-        roomService.findRoomByUsers(users, (err, room) => {
-            if (err) {
-                return res.status(500).json({
-                    title: 'An error occurred',
-                    error: err
-                });
-            }
-            if (room.length > 0) {
-                res.json({
-                    roomId: room[0]._id
-                });
-            } else {
-                res.json({
-                    roomId: -1
-                })
-            }
-        });
-    }
-});
-
-router.post("/create-room", (req, res) => {
-    let params = req.body;
-    if (params.myId.trim().length === 0 || params.theirId.trim().length === 0) {
-        res.status(500).json({
-            title: "An erroroccurred",
-            error: "Length must greater than 0"
-        });
-    } else {
-        let room = new Room({
-            users: [params.myId, params.theirId]
-        });
-        roomService.createRoom(room, (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    title: 'An error occurred',
-                    error: err
-                });
-            }
-            res.status(200).json({
-                roomId: room._id
-            });
-        });
-    }
-});
-
 router.post("/register", (req, res) => {
     let params = req.body;
     req.checkBody('email', 'Email field is required').notEmpty();

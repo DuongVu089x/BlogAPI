@@ -6,7 +6,10 @@ module.exports = {
         Room.find(query, callback);
     },
 
-    createRoom(room, callback) {
+    createRoom(users, callback) {
+        room = new Room({
+            users: users
+        });
         room.save(callback);
     }
 }

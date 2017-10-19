@@ -8,7 +8,7 @@ module.exports = {
         roomDao.findRoomByUsers(query, callback);
     },
 
-    createRoom(room, callback) {
-        roomDao.createRoom(room, callback);
+    createRoom(users, callback) {
+        roomDao.createRoom(users, callback);
     }
 }

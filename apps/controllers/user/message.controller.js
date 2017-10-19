@@ -1,9 +1,9 @@
 const express = require("express");
-const url = require("url");
 const mongoose = require('mongoose');
-const passport = require('passport');
+
 const Message = require('../../models/message');
 const messageService = require('../../services/message.service');
+const upload = require('../../common/uploadfile.config');
 
 const router = express.Router();
 
@@ -27,9 +27,9 @@ router.post("/create-message", (req, res) => {
                     error: err
                 });
             }
-        });
-        res.status(200).json({
-            title: 'success'
+            res.status(200).json({
+                result
+            });
         });
     }
 });
@@ -72,6 +72,13 @@ router.post("/get-list-message-by-room", (req, res) => {
             });
         });
     }
+});
+
+router.post('/upload-file', upload.array("uploads", 12), (req, res) => {
+    console.log('files', req.files);
+    res.json({
+        filename: req.files[0].filename
+    });
 });
 
 module.exports = router;

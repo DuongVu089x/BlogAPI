@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({
 app.set('trust proxy', 1);
 
 //Static folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('static', express.static(path.join(__dirname, 'public')));
 
 const controllers = require(__dirname + '/apps/controllers');
 
@@ -35,7 +35,7 @@ require('./apps/common/passport.config')(passport);
 app.use(expressJwt({
     secret: config.get('secret_key'),
 }).unless({
-    path: ['/api/user/login', '/api/user/register']
+    path: ['/api/user/login', '/api/user/register', '/api/user/error']
 }));
 
 app.use((req, res, next) => {

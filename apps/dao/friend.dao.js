@@ -25,7 +25,7 @@ module.exports = {
             // })
             .populate({
                 path: 'theirId',
-                select: 'email -_id avatar'
+                select: 'email _id avatar'
             }).exec(callback);
     }
 }
