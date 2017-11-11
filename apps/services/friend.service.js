@@ -3,7 +3,7 @@ const friendDao = require('../dao/friend.dao');
 module.exports = {
     findListFriends(userId, callback) {
         let query = {
-            myId: userId
+            ids: userId
         };
         friendDao.findListFriend(query, callback);
     }

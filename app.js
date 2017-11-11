@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({
 app.set('trust proxy', 1);
 
 //Static folder
-app.use('static', express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, '/public')));
 
 const controllers = require(__dirname + '/apps/controllers');
 

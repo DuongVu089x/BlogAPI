@@ -3,6 +3,20 @@ const userDao = require('../dao/user.dao');
 const passwordEncoder = require('../common/password.encoder');
 
 module.exports = {
+    findById(id) {
+        let query = {
+            _id: id
+        };
+        return new Promise((resolve, reject) => {
+            User.findOne(query, (err, user) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(user);
+                }
+            });
+        });
+    },
     findByUserName(firstName, callback) {
         let query = {
             firstName: firstName

@@ -3,7 +3,9 @@ const roomDao = require('../dao/room.dao');
 module.exports = {
     findRoomByUsers(users, callback) {
         let query = {
-            users: users
+            users: {
+                $all: users
+            }
         };
         roomDao.findRoomByUsers(query, callback);
     },

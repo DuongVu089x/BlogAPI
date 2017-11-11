@@ -18,7 +18,8 @@ router.post("/create-message", (req, res) => {
         let message = new Message({
             content: params.content,
             user: params.user,
-            room: params.room
+            room: params.room,
+            type: params.type
         });
         message.save((err, result) => {
             if (err) {

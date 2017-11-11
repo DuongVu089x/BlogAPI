@@ -10,6 +10,10 @@ var schema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    type: {
+        type: String,
+        required: true
+    },
     room: {
         type: Schema.Types.ObjectId,
         ref: 'Room'

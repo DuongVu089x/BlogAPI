@@ -14,7 +14,6 @@ router.post("/get-list-friend", (req, res) => {
     req.checkBody('email', 'Email field is required').notEmpty();
     req.checkBody('email', 'Email must be a valid email address').isEmail();
     let errors = req.validationErrors();
-
     if (errors) {
         return res.status(500).json({
             title: "An erroroccurred",
@@ -36,14 +35,12 @@ router.post("/get-list-friend", (req, res) => {
                             error: errors
                         });
                     }
-                    let result = [];
-                    friends.forEach((friend) => {
-                        result.push(friend.theirId);
-                    });
-                    res.status(200).json(result);
+                    res.status(200).json([].concat.apply([], friends.map(friend => {
+                        return friend.ids.filter((id) => !id.equals(user._id))
+                    })));
                 });
             }
-        })
+        });
     }
 });
 

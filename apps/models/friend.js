@@ -4,14 +4,10 @@ var mongooseUniqueVaidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-	myId: {
+	ids: [{
 		type: Schema.Types.ObjectId,
-        ref: 'User'
-	},
-	theirId: {
-		type: Schema.Types.ObjectId,
-        ref: 'User'
-	}
+		ref: 'User'
+	}]
 });
 
 module.exports = mongoose.model('Friend', schema);
